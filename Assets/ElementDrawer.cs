@@ -12,9 +12,11 @@ public class ElementDrawer : MonoBehaviour
 
     private void OnEnable(){
         EventManager.Instance.StartListening(Data.Events.OnTableReady, Init);
+        EventManager.Instance.StartListening(Data.Events.OnCorrectElementSelected, OnCorrectElementSelected);
     }
     private void OnDisable(){
         EventManager.Instance.StopListening(Data.Events.OnTableReady, Init);
+        EventManager.Instance.StopListening(Data.Events.OnCorrectElementSelected, OnCorrectElementSelected);
     }
 
     private void Init(){
@@ -32,5 +34,10 @@ public class ElementDrawer : MonoBehaviour
         EventManager.Instance.TriggerEvent(Data.Events.OnElementDrawed);
 
         return elementId;
+    }
+
+
+    private void OnCorrectElementSelected(){
+        gameObject.SetActive(false);
     }
 }

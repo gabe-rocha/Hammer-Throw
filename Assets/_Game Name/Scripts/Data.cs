@@ -18,6 +18,8 @@ public static class Data
         OnElementDrawed,
         OnGameManagerReady,
         OnTimerStarted,
+        OnHammerHitGround,
+        OnHammerThrown,
     }
 
     public static float gameDuration = 30f;

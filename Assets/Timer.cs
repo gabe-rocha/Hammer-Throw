@@ -8,11 +8,11 @@ using UnityEngine.Events;
 public class Timer : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI textTimeRemaining;
+    public float TimeRemaining { get => timeRemaining; private set => timeRemaining = value; }
+
 
     private float timerDuration, timeRemaining;
-    private Coroutine timerCor;
-
-    public float TimeRemaining { get; private set; }
+    private bool timerRunning = false;
 
     private void OnEnable(){
         EventManager.Instance.StartListening(Data.Events.OnElementDrawed, StartTimer);
@@ -24,22 +24,24 @@ public class Timer : MonoBehaviour
     }
 
     private void StartTimer(){
+        timerRunning = true;
         timerDuration = Data.gameDuration;
         timeRemaining = timerDuration;
-        timerCor = StartCoroutine(RunTimer());
+        StartCoroutine(RunTimer());
         EventManager.Instance.TriggerEvent(Data.Events.OnTimerStarted);
     }
 
     public IEnumerator RunTimer(){
         var startTime = Time.time;
 
-        while(Time.time < startTime + timerDuration){
+        while(Time.time < startTime + timerDuration && timerRunning){
             timeRemaining = timerDuration - Time.time - startTime;
             UpdateUI();
             yield return null;
         }
 
-        EventManager.Instance.TriggerEvent(Data.Events.OnTimeRanOut);
+        if(timerRunning)
+            EventManager.Instance.TriggerEvent(Data.Events.OnTimeRanOut);
     }
 
     private void UpdateUI(){
@@ -47,8 +49,6 @@ public class Timer : MonoBehaviour
     }
 
     private void OnCorrectElementSelected(){
-        if(timerCor != null){
-            StopCoroutine(timerCor);
-        }
+        timerRunning = false;
     }
 }

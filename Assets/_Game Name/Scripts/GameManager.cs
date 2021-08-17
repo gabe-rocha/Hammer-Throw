@@ -14,12 +14,14 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject playerPrefab;
     [SerializeField] private GameObject timerPrefab;
     [SerializeField] private GameObject hammerPrefab;
+    [SerializeField] private GameObject distanceMeterPrefab;
 
     private TableBuilder tableBuilder;
     private ElementDrawer elementDrawer;
     private Player player;
     private Timer timer;
     private Hammer hammer;
+    private DistanceMeter distanceMeter;
     [SerializeField] private Transform mainCanvas;
 
     
@@ -75,6 +77,9 @@ public class GameManager : MonoBehaviour
         
         go = Instantiate(timerPrefab, mainCanvas);
         timer = go.GetComponent<Timer>();
+        
+        go = Instantiate(distanceMeterPrefab, mainCanvas);
+        distanceMeter = go.GetComponent<DistanceMeter>();
         
         go = Instantiate(hammerPrefab, player.gameObject.transform.position, Quaternion.identity);
         hammer = go.GetComponent<Hammer>();
