@@ -13,7 +13,7 @@ public class Hammer : MonoBehaviour
 
     public float defaultForce = 100f, forceTimeMultFactor = 3f;
     private Rigidbody2D rb;
-    private float initialX, initialY;
+    private float initialX, initialCameraFollowY;
     private SpriteRenderer spriteRenderer;
 
     private CinemachineVirtualCamera vCam;
@@ -36,13 +36,12 @@ public class Hammer : MonoBehaviour
     void Start()
     {
         initialX = transform.position.x;
-        initialY = transform.position.y;
+        initialCameraFollowY = cameraFollow.position.y;
 
-
-        var pos = cameraFollow.position;
-        // pos.x = initialX + 3f; //TODO Magic number
-        pos.y = initialY;
-        cameraFollow.position = pos;
+        // var pos = cameraFollow.position;
+        // // pos.x = initialX + 3f; //TODO Magic number
+        // pos.y = initialCameraFollowY;
+        // cameraFollow.position = pos;
 
         vCam = (CinemachineVirtualCamera)Camera.main.GetComponent<CinemachineBrain>().ActiveVirtualCamera;
         vCam.Follow = cameraFollow;
@@ -64,7 +63,7 @@ public class Hammer : MonoBehaviour
     private void UpdateCameraLookAt()
     {
         var pos = cameraFollow.position;
-        pos.y = initialY;
+        pos.y = initialCameraFollowY;
         cameraFollow.position = pos;
     }
 

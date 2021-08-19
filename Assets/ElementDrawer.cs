@@ -6,7 +6,8 @@ using TMPro;
 public class ElementDrawer : MonoBehaviour
 {
 
-    [SerializeField] private TextMeshProUGUI txtElementToFind;
+    // [SerializeField] private TextMeshProUGUI txtElementToFind;
+    [SerializeField] private TextMeshPro txtElementToFind;
     private Dictionary<string,string> dicElements = new Dictionary<string, string>();
     private int numElements;
 
@@ -23,7 +24,6 @@ public class ElementDrawer : MonoBehaviour
         dicElements = Data.dicElements;
         numElements = dicElements.Count;
         EventManager.Instance.TriggerEvent(Data.Events.OnDrawerReady);
-        
     }
 
     public int Draw(){
@@ -31,13 +31,13 @@ public class ElementDrawer : MonoBehaviour
         txtElementToFind.text = dicElements.Values.ElementAt(elementId - 1);
         
         Debug.Log($"Element drawed: {txtElementToFind.text}");
-        EventManager.Instance.TriggerEvent(Data.Events.OnElementDrawed);
+        // EventManager.Instance.TriggerEvent(Data.Events.OnElementDrawed); //we will let the gamemanager call this
 
         return elementId;
     }
 
 
     private void OnCorrectElementSelected(){
-        gameObject.SetActive(false);
+        // gameObject.SetActive(false);
     }
 }

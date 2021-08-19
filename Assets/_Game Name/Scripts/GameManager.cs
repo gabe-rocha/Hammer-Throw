@@ -72,7 +72,7 @@ public class GameManager : MonoBehaviour
         go = Instantiate(playerPrefab);
         player = go.GetComponent<Player>();
 
-        go = Instantiate(elementDrawerPrefab, mainCanvas);
+        go = Instantiate(elementDrawerPrefab);
         elementDrawer = go.GetComponent<ElementDrawer>();
         
         go = Instantiate(timerPrefab, mainCanvas);

@@ -8,6 +8,7 @@ using UnityEngine.Events;
 public class Timer : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI textTimeRemaining;
+    [SerializeField] private GameObject powerMeterNeedle;
     public float TimeRemaining { get => timeRemaining; private set => timeRemaining = value; }
 
 
@@ -45,7 +46,11 @@ public class Timer : MonoBehaviour
     }
 
     private void UpdateUI(){
-        textTimeRemaining.text = timeRemaining.ToString("0") + "s";
+        var pos = powerMeterNeedle.GetComponent<RectTransform>().localPosition;
+        pos.y = timeRemaining * 14.3f;
+        powerMeterNeedle.GetComponent<RectTransform>().localPosition = pos;
+
+        textTimeRemaining.text = timeRemaining.ToString("00:00.000");
     }
 
     private void OnCorrectElementSelected(){

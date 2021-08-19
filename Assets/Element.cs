@@ -5,12 +5,12 @@ using TMPro;
 
 public class Element : MonoBehaviour    
 {
-    [SerializeField] private GameObject goHighlightedInGameHelper, goHighlightedMouseOver, goSelected, goTooltip;
+    [SerializeField] private GameObject goHighlightedInGameHelper, goHighlightedMouseOver, goSelected, goTooltip, goFader;
     [SerializeField] private TextMeshProUGUI txtNumber, txtSymbol, txtTooltipName;
     
     private int id;
     private string strSymbol, strName;
-    private bool isSelected;
+    private bool isForcedHighlighted;
 
     public void Init(int id, string strSymbol, string strName){
         this.id = id;
@@ -21,19 +21,19 @@ public class Element : MonoBehaviour
         txtSymbol.text = strSymbol;
         txtTooltipName.text = strName;
 
-        isSelected = false;
+        isForcedHighlighted = false;
     }
 
     public void Deselect(){
         goSelected.SetActive(false);
-        isSelected = false;
     }
 
     private void OnMouseOver()
     {
-        if(!isSelected)
-            goHighlightedMouseOver.SetActive(true);
+        if(!isForcedHighlighted)
+            goFader.SetActive(false);
 
+        goHighlightedMouseOver.SetActive(true);
         goTooltip.SetActive(true);
     }
 
@@ -41,23 +41,33 @@ public class Element : MonoBehaviour
     {
         Debug.Log($"Element {id} selected");
 
-        if(GameManager.Instance.elementSelectedByPlayer == this)
-            return;
+        // if(GameManager.Instance.elementSelectedByPlayer == this)
+            // return;
         
-        goHighlightedMouseOver.SetActive(false);
-        goSelected.SetActive(true);
+        // goHighlightedMouseOver.SetActive(false);
+        // goSelected.SetActive(true);
         
-        if(GameManager.Instance.elementSelectedByPlayer != null)
-            GameManager.Instance.elementSelectedByPlayer.Deselect();
+        // if(GameManager.Instance.elementSelectedByPlayer != null)
+            // GameManager.Instance.elementSelectedByPlayer.Deselect();
         
         GameManager.Instance.elementSelectedByPlayer = this;
         EventManager.Instance.TriggerEvent(Data.Events.OnElementSelected);
-        isSelected = true;
+        // isForcedHighlighted = true;
     }
 
     private void OnMouseExit()
     {
+        if(!isForcedHighlighted)
+            goFader.SetActive(true);
+        
         goHighlightedMouseOver.SetActive(false);
         goTooltip.SetActive(false);
+    }
+
+    public void ForceHighlight(bool isOn){
+        isForcedHighlighted = isOn;
+        // goHighlightedMouseOver.SetActive(isOn);
+        // goSelected.SetActive(isOn);
+        goFader.SetActive(!isOn);
     }
 }

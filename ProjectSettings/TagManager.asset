@@ -45,3 +45,6 @@ TagManager:
   - name: Table
     uniqueID: 1143065037
     locked: 0
+  - name: Foreground
+    uniqueID: 2394182847
+    locked: 0

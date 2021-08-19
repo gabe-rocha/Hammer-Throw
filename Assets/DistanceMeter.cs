@@ -22,9 +22,14 @@ public class DistanceMeter : MonoBehaviour
         EventManager.Instance.StopListeningWithGOParam(Data.Events.OnHammerHitGround, OnHammerHitGround);
     }
 
+    private void Start()
+    {
+        textDistance.text = "0.00m";
+    }
+
     private void Update(){
         if(hammer != null)
-            textDistance.text = (hammer.transform.position.x - startX).ToString("0.00");
+            textDistance.text = (hammer.transform.position.x - startX).ToString("0.00" + "m");
     }
 
     private void OnHammerThrown(GameObject hammer)
