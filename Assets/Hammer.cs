@@ -70,11 +70,12 @@ public class Hammer : MonoBehaviour
     private void Throw()
     {
         spriteRenderer.enabled = true;
-        defaultForce += GameManager.Instance.GetRemainingTime() * forceTimeMultFactor;
+        // defaultForce += GameManager.Instance.GetRemainingTime() * forceTimeMultFactor;
+        var force = GameManager.Instance.GetRemainingTime() * forceTimeMultFactor * 15f;
         Vector2 direction = new Vector2(1f, 0.33f);
-        rb.AddForce(direction * defaultForce);
+        rb.AddForce(direction * force);
         
-        StartCoroutine(UpdateCameraFollowOffset(4, 0.5f));
+        StartCoroutine(UpdateCameraFollowOffset(-4, 2f));
 
         EventManager.Instance.TriggerEventWithGOParam(Data.Events.OnHammerThrown, gameObject);
     }
@@ -85,11 +86,21 @@ public class Hammer : MonoBehaviour
         var newOffset = cineTransposer.m_FollowOffset;
         newOffset.x = newOffsetX;
 
-        while(cineTransposer.m_FollowOffset.x > newOffset.x){
-            var offset = cineTransposer.m_FollowOffset;
-            offset.x -= speed * Time.deltaTime;
-            cineTransposer.m_FollowOffset = offset;
-            yield return null;
+        if(newOffsetX <= 0){
+            while(cineTransposer.m_FollowOffset.x > newOffset.x){
+                var offset = cineTransposer.m_FollowOffset;
+                offset.x -= speed * Time.deltaTime;
+                cineTransposer.m_FollowOffset = offset;
+                yield return null;
+            }
+        }
+        else{
+            while(cineTransposer.m_FollowOffset.x < newOffset.x){
+                var offset = cineTransposer.m_FollowOffset;
+                offset.x += speed * Time.deltaTime;
+                cineTransposer.m_FollowOffset = offset;
+                yield return null;
+            }
         }
     }
 
@@ -105,7 +116,7 @@ public class Hammer : MonoBehaviour
 
             dust.Play();
             
-            StartCoroutine(UpdateCameraFollowOffset(-3, 2f));
+            StartCoroutine(UpdateCameraFollowOffset(-1, 2f));
             Debug.Log($"Distance: {transform.position.x - initialX}");
 
             EventManager.Instance.TriggerEventWithGOParam(Data.Events.OnHammerHitGround, gameObject);
