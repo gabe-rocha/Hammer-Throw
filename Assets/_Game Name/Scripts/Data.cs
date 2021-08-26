@@ -20,6 +20,8 @@ public static class Data
         OnTimerStarted,
         OnHammerHitGround,
         OnHammerThrown,
+        OnStartButtonPressed,
+        OnFinalDistanceCalculated,
     }
 
     public static float gameDuration = 30f;
@@ -144,6 +146,9 @@ public static class Data
         ["Ts"] = "Tennessine",
         ["Og"] = "Oganesson",
         };
+    internal static readonly float DelayBeforeShowingFinalText = 3f;
+    internal static readonly float DelayBeforeShowingFinalButtons = 5f;
+    internal static readonly float fadeOutSpeed = 2f;
 }
 
 

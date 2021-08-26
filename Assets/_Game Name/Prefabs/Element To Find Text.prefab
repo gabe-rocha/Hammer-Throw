@@ -98,7 +98,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: RUTHERFORDIUM
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 69d8785f4e035b245a13e528c1efcdaa, type: 2}
   m_sharedMaterial: {fileID: -4074878888009222201, guid: 69d8785f4e035b245a13e528c1efcdaa, type: 2}

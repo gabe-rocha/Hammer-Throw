@@ -857,6 +857,7 @@ MonoBehaviour:
   goHighlightedMouseOver: {fileID: 1007881425}
   goSelected: {fileID: 470784868}
   goTooltip: {fileID: 2862737846483537554}
+  goFader: {fileID: 0}
   txtNumber: {fileID: 1774392511}
   txtSymbol: {fileID: 561010830858021352}
   txtTooltipName: {fileID: 4279587535387107414}

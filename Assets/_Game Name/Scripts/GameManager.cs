@@ -43,14 +43,14 @@ public class GameManager : MonoBehaviour
     {
         EventManager.Instance.StopListening(Data.Events.OnDrawerReady, OnDrawerReady);
         EventManager.Instance.StopListening(Data.Events.OnElementSelected, OnElementSelected);
-        EventManager.Instance.StopListening(Data.Events.OnTimeRanOut, OnTimerStarted);
+        EventManager.Instance.StopListening(Data.Events.OnTimerStarted, OnTimerStarted);
         EventManager.Instance.StopListening(Data.Events.OnTimeRanOut, OnTimeRanOut);
     }
 
     void Awake(){
         if (Instance == null){
             Instance = this;
-            DontDestroyOnLoad(this.gameObject);
+            // DontDestroyOnLoad(this.gameObject);
 
             Application.targetFrameRate = -1;
 
@@ -66,10 +66,10 @@ public class GameManager : MonoBehaviour
 
     private void InstantiateComponents()
     {
-        var go = Instantiate(tableBuilderPrefab);
-        tableBuilder = go.GetComponent<TableBuilder>();
+        // var go = Instantiate(tableBuilderPrefab);
+        // tableBuilder = go.GetComponent<TableBuilder>();
 
-        go = Instantiate(playerPrefab);
+        var go = Instantiate(playerPrefab);
         player = go.GetComponent<Player>();
 
         go = Instantiate(elementDrawerPrefab);
@@ -81,7 +81,7 @@ public class GameManager : MonoBehaviour
         go = Instantiate(distanceMeterPrefab, mainCanvas);
         distanceMeter = go.GetComponent<DistanceMeter>();
         
-        go = Instantiate(hammerPrefab, player.gameObject.transform.position, Quaternion.identity);
+        go = Instantiate(hammerPrefab);
         hammer = go.GetComponent<Hammer>();
     }
 
@@ -120,5 +120,10 @@ public class GameManager : MonoBehaviour
         if(Input.GetKeyDown(KeyCode.Alpha2)){
             EventManager.Instance.TriggerEvent(Data.Events.OnCorrectElementSelected);
         }
+    }
+
+    internal string GetDistance()
+    {
+        return distanceMeter.GetDistance();
     }
 }
