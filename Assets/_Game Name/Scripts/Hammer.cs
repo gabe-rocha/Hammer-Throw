@@ -1,20 +1,17 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 using Cinemachine;
 using Cinemachine.PostFX;
-using Cinemachine.Editor;
 using TMPro;
+using UnityEngine;
 
-public class Hammer : MonoBehaviour
-{
+public class Hammer : MonoBehaviour {
     [SerializeField] private Transform cameraFollow;
     [SerializeField] private ParticleSystem dust;
     [SerializeField] private GameObject spriteDistance;
     [SerializeField] private TextMeshPro textDistance;
     [SerializeField] private GameObject hammerModel;
-    
 
     public float defaultForce = 100f, forceTimeMultFactor = 3f;
     private Rigidbody2D rb;
@@ -24,16 +21,14 @@ public class Hammer : MonoBehaviour
     private CinemachineVirtualCamera vCam;
     private Coroutine updateOffsetCor;
 
-
-    private void OnEnable(){
+    private void OnEnable() {
         EventManager.Instance.StartListening(Data.Events.OnCorrectElementSelected, OnCorrectElementSelected);
     }
-    private void OnDisable(){
+    private void OnDisable() {
         EventManager.Instance.StopListening(Data.Events.OnCorrectElementSelected, OnCorrectElementSelected);
     }
 
-    private void Awake()
-    {
+    private void Awake() {
         rb = GetComponent<Rigidbody2D>();
         rb.bodyType = RigidbodyType2D.Kinematic;
         spriteRenderer = GetComponent<SpriteRenderer>();
@@ -41,8 +36,7 @@ public class Hammer : MonoBehaviour
         spriteDistance.SetActive(false);
         hammerModel.SetActive(false);
     }
-    void Start()
-    {
+    void Start() {
         initialX = transform.position.x;
         initialCameraFollowY = cameraFollow.position.y;
 
@@ -56,16 +50,15 @@ public class Hammer : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
-    {
-        #if UNITY_EDITOR
-            if(Input.GetKeyDown(KeyCode.Alpha1)){
-                Throw();
-            }
-        #endif
+    void Update() {
+#if UNITY_EDITOR
+        if(Input.GetKeyDown(KeyCode.Alpha1)) {
+            Throw();
+        }
+#endif
 
         textDistance.text = GameManager.Instance.GetDistance();
-        
+
         // transform.rotation.SetLookRotation(rb.velocity);
 
         Vector2 v = rb.velocity;
@@ -73,40 +66,36 @@ public class Hammer : MonoBehaviour
         hammerModel.transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
 
     }
-    private void FixedUpdate()
-    {
+    private void FixedUpdate() {
         FixedCameraLookAtYPosition();
     }
 
-    private void FixedCameraLookAtYPosition()
-    {
+    private void FixedCameraLookAtYPosition() {
         var pos = cameraFollow.position;
         pos.y = initialCameraFollowY;
         cameraFollow.position = pos;
     }
 
-    private void Throw()
-    {
+    private void Throw() {
         spriteRenderer.enabled = true;
         hammerModel.SetActive(true);
         // defaultForce += GameManager.Instance.GetRemainingTime() * forceTimeMultFactor;
         var force = GameManager.Instance.GetRemainingTime() * forceTimeMultFactor * 15f;
         Vector2 direction = new Vector2(1f, 0.33f);
         rb.AddForce(direction * force);
-        
+
         // updateOffsetCor = StartCoroutine(UpdateCameraFollowOffset(-8, 2f));
 
         // StartCoroutine(UpdateCameraFollowOffset());
 
         EventManager.Instance.TriggerEventWithGOParam(Data.Events.OnHammerThrown, gameObject);
     }
-    private IEnumerator UpdateCameraFollowOffset()
-    {
+    private IEnumerator UpdateCameraFollowOffset() {
         float speed = 2f;
         var cineTransposer = vCam.GetCinemachineComponent<CinemachineTransposer>();
         var newOffset = cineTransposer.m_FollowOffset;
-        
-        while(newOffset.x > 0){
+
+        while (newOffset.x > 0) {
             newOffset.x -= speed * Time.deltaTime;
             cineTransposer.m_FollowOffset = newOffset;
             yield return null;
@@ -137,14 +126,13 @@ public class Hammer : MonoBehaviour
     //     }
     // }
 
-    private void OnCorrectElementSelected(){
+    private void OnCorrectElementSelected() {
         rb.bodyType = RigidbodyType2D.Dynamic;
         Throw();
     }
 
-    private void OnCollisionEnter2D(Collision2D other)
-    {
-        if(other.gameObject.CompareTag("Ground")){
+    private void OnCollisionEnter2D(Collision2D other) {
+        if(other.gameObject.CompareTag("Ground")) {
             // rb.bodyType = RigidbodyType2D.Static;
 
             spriteDistance.transform.parent = null;
@@ -154,12 +142,12 @@ public class Hammer : MonoBehaviour
             vel.x /= 2f;
             vel.y = vel.y > 0.1f ? vel.y / 1.5f : 0f;
             rb.velocity = vel;
-            
+
             // var dist = transform.position.x - initialX;
             // rb.mass = dist / 5f;
 
             dust.Play();
-            
+
             StartCoroutine(UpdateCameraFollowOffsetWithBounce(0, 3f));
             // var cineTransposer = vCam.GetCinemachineComponent<CinemachineTransposer>();
             // cineTransposer.m_XDamping = 15f;
@@ -179,17 +167,12 @@ public class Hammer : MonoBehaviour
 
             Debug.Log($"Distance: {transform.position.x - initialX}");
 
-            
-
             EventManager.Instance.TriggerEventWithGOParam(Data.Events.OnHammerHitGround, gameObject);
         }
     }
 
-        
-
-    private IEnumerator UpdateCameraFollowOffsetWithBounce(float newOffsetX, float speed)
-    {
-        if(updateOffsetCor != null){
+    private IEnumerator UpdateCameraFollowOffsetWithBounce(float newOffsetX, float speed) {
+        if(updateOffsetCor != null) {
             StopCoroutine(updateOffsetCor);
         }
         // vCam.Follow = null;
@@ -200,7 +183,7 @@ public class Hammer : MonoBehaviour
         // int numBounces = 4;
         var bounciness = .25f;
 
-        while(newOffset.x > newOffsetX ){
+        while (newOffset.x > newOffsetX) {
             newOffset.x -= speed * Time.deltaTime;
             cineTransposer.m_FollowOffset = newOffset;
             yield return null;
@@ -215,7 +198,6 @@ public class Hammer : MonoBehaviour
         //     cineTransposer.m_FollowOffset = newOffset;
         //     yield return null;
         // }
-        
 
         // var movingLeft = transform.position.x < vCam.transform.position.x - 10;
 
